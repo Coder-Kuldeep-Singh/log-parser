@@ -15,6 +15,20 @@ const (
 	WARNING  = 3
 )
 
+// Logs handle the structure of the log files
+type Logs struct {
+	ip             string
+	timestamp      string
+	method         string
+	url            string
+	ProtocolMethod string
+	ServerResponse string
+	SendBytes      string
+	userAgent      string
+	// browser        string
+	// system         string
+}
+
 // ErrorHandling handles the error and return formated error
 func ErrorHandling(err error, msg string, code int) error {
 	if err != nil {
@@ -34,9 +48,8 @@ func OpenFile(path string) (*os.File, error) {
 }
 
 // ReadFile reads the file
-func ReadFile(outcome *os.File) chan []string {
-	rows := make(chan []string)
-	// counter := 0
+func ReadFile(outcome *os.File) chan Logs {
+	rows := make(chan Logs)
 	go func() {
 		defer func() {
 			close(rows)
@@ -45,9 +58,23 @@ func ReadFile(outcome *os.File) chan []string {
 		scanner.Split(bufio.ScanLines)
 
 		for scanner.Scan() {
-			// log.Printf("Counter --> %d", counter)
-			rows <- []string{scanner.Text()}
-			// counter++
+			matched := regularExpression(`^(\S+) (\S+) (\S+) \[([\w:/]+\s[+\-]\d{4})\] "(\S+) (\S+)\s*(\S*)" (\d{3}) (\S+) (\S+) "(.*)"`, scanner.Text())
+			if len(matched) == 0 {
+				continue
+			}
+			rows <- Logs{
+				ip:             matched[0][1],
+				timestamp:      matched[0][4],
+				method:         matched[0][5],
+				url:            matched[0][6],
+				ProtocolMethod: matched[0][7],
+
+				ServerResponse: matched[0][8],
+				SendBytes:      matched[0][9],
+				userAgent:      matched[0][11],
+				// browser        :,
+				// system         :,
+			}
 		}
 	}()
 	return rows
@@ -85,7 +112,6 @@ func getIP(logRecord []string) chan []string {
 	go func() {
 		defer func() {
 			close(ips)
-			log.Println("Channel Closed")
 		}()
 		for _, record := range logRecord {
 			expression := `(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}`
@@ -110,7 +136,6 @@ func getTimeStamp(logRecord []string) chan []string {
 			// c, ok := <-stamp
 			// if ok {
 			close(stamp)
-			log.Println("channel closed")
 			// }
 			// log.Println("channel still open")
 
@@ -129,6 +154,30 @@ func getTimeStamp(logRecord []string) chan []string {
 	return stamp
 }
 
+// TopIPS return the top ips from logs
+func TopIPS(queue map[string]int) {
+	// top := []string{}
+	for i := range queue {
+		// if queue[i] > queue[i]+1 {
+		// 	log.Println(queue[i])
+		// }
+		log.Printf("%d----->%d", queue[i], queue[i])
+	}
+}
+
+func getUniqueQueue(record []string, length int) map[string]int {
+	if length == 0 || length == 1 {
+		return nil
+	}
+	queue := make(map[string]int)
+	for idx := 0; idx < length-1; idx++ {
+		if record[idx] != record[idx+1] {
+			queue[record[idx]]++
+		}
+	}
+	return queue
+}
+
 func main() {
 	file, err := OpenFile("./access.log")
 	err = ErrorHandling(err, "error to open file", WARNING)
@@ -144,21 +193,31 @@ func main() {
 		}
 	}()
 	rows := ReadFile(file)
+	for i := range rows {
+		log.Println(i)
+	}
+	// log.Println(rows)
 	// parallel := 2
 	// var wg sync.WaitGroup
 	// wg.Add(parallel)
 	// go func() {
 	// 	defer wg.Done()
 	// go func() {
-	ips := getIP(chanToSlice(rows))
+	// ips := getIP(chanToSlice(rows))
+	// converted := chanToSlice(ips)
+	// unique := getUniqueQueue(converted, len(converted))
+	// for key, value := range unique {
+	// 	log.Printf("IP %s >>> %d\n", key, value)
+	// }
+	// TopIPS(unique)
+	// log.Println(len(unique))
 	// defer close(ips)
-	printrecords(ips)
 	// }()
 
 	// go func() {
-	stamp := getTimeStamp(chanToSlice(rows))
-	// defer close(stamp)
-	printrecords(stamp)
+	// stamp := getTimeStamp(chanToSlice(rows))
+	// // defer close(stamp)
+	// printrecords(stamp)
 	// }()
 	// }()
 	// wg.Wait()
