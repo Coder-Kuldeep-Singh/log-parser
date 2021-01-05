@@ -3,14 +3,24 @@ package controllers
 import (
 	"log"
 	"log-parser/models"
+	"log-parser/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	geo "github.com/oschwald/geoip2-golang"
 )
+
+func openLocationDB(dbPath string) (*geo.Reader, error) {
+	db, err := geo.Open(dbPath)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
 
 // MainDashboard holds the combination of all the analysis on the same page
 func MainDashboard(c *gin.Context) {
-	f := []string{"./html/static/nginx/access.log"}
+	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1"}
 	queue := [][]models.Logs{}
 	for _, path := range f {
 		log.Printf("File Processing Start : [%s]", path)
@@ -28,17 +38,26 @@ func MainDashboard(c *gin.Context) {
 	log.Println("Processing: Deleting the Old queue so we can use the Memory for other queues")
 	queue = nil
 	log.Println("Processing: End")
-	// CountURLQueue := getUniqueURLQueue(updateQueue)
-	// _ = GetUniqueURLQueue(updateQueue)
-	// for key, value := range CountURLQueue {
-	// 	log.Printf("URL %s >>> %d\n", key, value)
-	// }
-	// log.Println(len(UniqueIP(updateQueue)))
-	// log.Println(GetUniqueMethodQueue(updateQueue))
-	// log.Printf("Total Hits >>> %d", len(updateQueue))
+
+	ips := getIPCounts(updateQueue)
+	Location := []service.Location{}
+	db, err := openLocationDB("./db/GeoLite2-City.mmdb")
+	err = models.ErrorHandling(err, "error to open the location database", models.WARNING)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	for key := range ips {
+		Location = append(Location, service.GetLocationFromIP(db, key))
+	}
+	db.Close()
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
 		"TotalHits": len(updateQueue),
 		// "VisitedIP": UniqueIP(updateQueue),
+		"IPS":      ips,
+		"Location": Location,
+		"URLS":     GetUniqueURLQueue(updateQueue),
+		"Methods":  GetUniqueMethodQueue(updateQueue),
 	})
 }
 
