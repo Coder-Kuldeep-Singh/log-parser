@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytic Dashboard(Log-Parser)</title>
-    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <style>
+    </style>
 </head>
 <body>
     <h1>
@@ -13,11 +15,90 @@
     <span>
         Website Hits
     </span>
-    <!-- <h1>Visited IP LIST</h1>
-    {{range $i := .VisitedIP}}
-        <p>{{$i}}</p>
+    <!-- {{range .Location}}
+        {{.Latitude}},{{.Longitude}}</br>
     {{end}} -->
+    <div style="padding:10px;">
+        <div style="width: 30%;float: left;">
+            <canvas id="IPChart" width="400" height="400"></canvas>
+        </div>
+        <!-- <div style="width: 30%;float: right;">
+            <canvas id="URLChart" width="400" height="400"></canvas>
+        </div> -->
+        <div style="width: 30%;float: left;">
+            <canvas id="MethodChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <!-- IP chart -->
+    
     <script>
+        var ctx = document.getElementById('IPChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [{{range $key,$value := .IPS}} '{{$key}}', {{end}}],
+                datasets: [{
+                    label: "Visited IPS",
+                    data: [{{range $value := .IPS}} {{$value}}, {{end}}],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
     </script>
+    <!-- <script>
+        var nctx = document.getElementById('URLChart').getContext('2d');
+        var URLChart = new Chart(nctx, {
+            type: 'bar',
+            data: {
+                // labels: [{{range $key,$value := .URLS}} '{{$key}}', {{end}}],
+                datasets: [{
+                    label: "Visited URLS",
+                    data: [{{range $value := .URLS}} {{$value}}, {{end}}],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+        </script> -->
+        <script>
+            var Mctx = document.getElementById('MethodChart').getContext('2d');
+            var myChart = new Chart(Mctx, {
+                type: 'line',
+                data: {
+                    labels: [{{range $key,$value := .Methods}} '{{$key}}', {{end}}],
+                    datasets: [{
+                        label: "Visited IPS",
+                        data: [{{range $value := .Methods}} {{$value}}, {{end}}],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        </script>
 </body>
 </html>
