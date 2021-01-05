@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report IP</title>
+    <link rel="stylesheet" href="/home/css/style.css" />
+</head>
+<body>
+    <div class="row">
+        <div class="column">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            IP
+                        </th>
+                        <th>
+                            Count
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range $key,$value := .IP}}
+                    <tr>
+                        <td>{{$key}}</td>
+                        <td>{{$value}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            IP
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{range .Logs}}
+                    <tr>
+                        <td>{{.IP}}</td>
+                    </tr>
+                    {{end}}
+                </tbody>
+            </table>
+        </div>
+      </div>
+</body>
+</html>
