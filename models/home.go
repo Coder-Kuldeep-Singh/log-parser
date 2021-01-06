@@ -16,14 +16,14 @@ const (
 
 // Logs handle the structure of the log files
 type Logs struct {
-	IP             string
-	Timestamp      string
-	Method         string
-	URL            string
-	ProtocolMethod string
-	ServerResponse string
-	SendBytes      string
-	UserAgent      string
+	IP             string `json:"ip"`
+	Timestamp      string `json:"timestamp"`
+	Method         string `json:"method"`
+	URL            string `json:"url"`
+	ProtocolMethod string `json:"protocol_method"`
+	ServerResponse string `json:"http_status"`
+	SendBytes      string `json:"sent_bytes"`
+	UserAgent      string `json:"user_agent"`
 	// browser        string
 	// system         string
 }
