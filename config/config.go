@@ -20,7 +20,7 @@ type DB interface {
 	open() *SQL
 	// connect is the combination of three function which makes connection with db and returns
 	// alive connection
-	connect() *SQL
+	Connect() *SQL
 	// dcs returns the sql connection string
 	dcs() string
 	// loadEnv loads the env file data into running environment
@@ -28,12 +28,34 @@ type DB interface {
 	// setLimits sets the limited connection strings
 	setLimits()
 	// closed closes the open db connection
-	closed()
+	Closed()
+	// Query returns the rows of the sql statement
+	Query(statement string) (*sql.Rows, error)
+	// Exec uses to insert data into database
+	Exec(statement string) (sql.Result, error)
 }
 
 // SQL holds the sql connection
 type SQL struct {
 	Alive *sql.DB
+}
+
+// Query returns the rows of the sql statement
+func (db *SQL) Query(statement string) (*sql.Rows, error) {
+	rows, err := db.Alive.Query(statement)
+	if err != nil {
+		return nil, err
+	}
+	return rows, nil
+}
+
+// Exec uses to insert data into database
+func (db *SQL) Exec(statement string) (sql.Result, error) {
+	result, err := db.Alive.Exec(statement)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 // loadEnv return the config of the database.
@@ -72,12 +94,13 @@ func (db *SQL) setLimits() {
 	db.Alive.SetConnMaxLifetime(time.Minute * 5)
 }
 
-// closed closes the open sql connection
-func (db *SQL) closed() {
+// Closed closes the open sql connection
+func (db *SQL) Closed() {
 	db.Alive.Close()
 }
 
-func connect() (*SQL, error) {
+// Connect connect to db
+func Connect() (*SQL, error) {
 	env := loadEnv()
 	db, err := env.open()
 	if err != nil {
