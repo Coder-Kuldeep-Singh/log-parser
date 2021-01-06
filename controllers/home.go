@@ -5,6 +5,7 @@ import (
 	"log-parser/models"
 	"log-parser/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	geo "github.com/oschwald/geoip2-golang"
@@ -20,7 +21,7 @@ func openLocationDB(dbPath string) (*geo.Reader, error) {
 
 // MainDashboard holds the combination of all the analysis on the same page
 func MainDashboard(c *gin.Context) {
-	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1"}
+	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1", "./html/static/nginx/access.log.2", "./html/static/nginx/access.log.3", "./html/static/nginx/access.log.4", "./html/static/nginx/access.log.5", "./html/static/nginx/access.log.6", "./html/static/nginx/access.log.7", "./html/static/nginx/access.log.8"}
 	queue := [][]models.Logs{}
 	for _, path := range f {
 		log.Printf("File Processing Start : [%s]", path)
@@ -28,7 +29,8 @@ func MainDashboard(c *gin.Context) {
 		err = models.ErrorHandling(err, "error to open file", models.WARNING)
 		if err != nil {
 			log.Println(err)
-			return
+			// return
+			continue
 		}
 		queue = append(queue, models.ReadFile(file))
 		log.Printf("File Processing End : [%s]", path)
@@ -62,6 +64,7 @@ func MainDashboard(c *gin.Context) {
 		"Methods":      GetUniqueMethodQueue(updateQueue),
 		"Countries":    GetCountries(Location),
 		"HTTPCODE":     getHTTPCode(updateQueue),
+		"HTTPERROR":    getTheErrorStatus(updateQueue),
 	})
 }
 
@@ -169,6 +172,26 @@ func getHTTPCode(record []models.Logs) map[string]int {
 	log.Printf("Processing: Generating HTTP Code Count")
 	for _, i := range record {
 		queue[i.ServerResponse]++
+	}
+	log.Println("Processing: End")
+	return queue
+}
+
+func getTheErrorStatus(record []models.Logs) map[string]int {
+	queue := make(map[string]int)
+	log.Printf("Processing: Generating HTTP Code Count")
+	for _, i := range record {
+		if i.ServerResponse == "" {
+			continue
+		}
+		num, err := strconv.Atoi(i.ServerResponse)
+		if err != nil {
+			log.Printf("error to convert str to int %s", err.Error())
+			continue
+		}
+		if num >= 299 {
+			queue[i.ServerResponse]++
+		}
 	}
 	log.Println("Processing: End")
 	return queue
