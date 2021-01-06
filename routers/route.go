@@ -15,5 +15,6 @@ func SetupRouter() *gin.Engine {
 	router.Static("/home", "./html/static")
 	router.GET("/analysis", controllers.MainDashboard)
 	router.GET("/analysis/ip-report", controllers.ReportIP)
+	router.POST("api/upload_logs", controllers.GetLogsFromClientSide)
 	return router
 }
