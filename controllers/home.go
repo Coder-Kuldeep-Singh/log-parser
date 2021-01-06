@@ -51,19 +51,23 @@ func MainDashboard(c *gin.Context) {
 		Location = append(Location, service.GetLocationFromIP(db, key))
 	}
 	db.Close()
+	lastElement := Location[len(Location)-1]
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
 		"TotalHits": len(updateQueue),
 		// "VisitedIP": UniqueIP(updateQueue),
-		"IPS":      ips,
-		"Location": Location,
-		"URLS":     GetUniqueURLQueue(updateQueue),
-		"Methods":  GetUniqueMethodQueue(updateQueue),
+		"IPS":          ips,
+		"Location":     Location[0 : len(Location)-2],
+		"LastLocation": lastElement,
+		"URLS":         GetUniqueURLQueue(updateQueue),
+		"Methods":      GetUniqueMethodQueue(updateQueue),
+		"Countries":    GetCountries(Location),
+		"HTTPCODE":     getHTTPCode(updateQueue),
 	})
 }
 
 // ReportIP generates the report of ip
 func ReportIP(c *gin.Context) {
-	f := []string{"./html/static/nginx/access.log"}
+	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1", "./html/static/nginx/access.log.2"}
 	queue := [][]models.Logs{}
 	for _, path := range f {
 		log.Printf("File Processing Start : [%s]", path)
@@ -71,7 +75,8 @@ func ReportIP(c *gin.Context) {
 		err = models.ErrorHandling(err, "error to open file", models.WARNING)
 		if err != nil {
 			log.Println(err)
-			return
+			// return
+			continue
 		}
 		queue = append(queue, models.ReadFile(file))
 		log.Printf("File Processing End : [%s]", path)
@@ -97,6 +102,17 @@ func UniqueIP(queue []models.Logs) []string {
 			keys[entry.IP] = true
 			list = append(list, entry.IP)
 		}
+	}
+	log.Println("Processing: End")
+	return list
+}
+
+// GetCountries eliminates the duplicate data and returns back the unique ips
+func GetCountries(queue []service.Location) map[string]int {
+	list := make(map[string]int)
+	log.Println("Processing: Generating unique Countries")
+	for _, entry := range queue {
+		list[entry.Country]++
 	}
 	log.Println("Processing: End")
 	return list
@@ -146,4 +162,14 @@ func UpdatedQueue(queue [][]models.Logs) []models.Logs {
 	}
 	log.Println("Processing: End")
 	return updateQueue
+}
+
+func getHTTPCode(record []models.Logs) map[string]int {
+	queue := make(map[string]int)
+	log.Printf("Processing: Generating HTTP Code Count")
+	for _, i := range record {
+		queue[i.ServerResponse]++
+	}
+	log.Println("Processing: End")
+	return queue
 }
