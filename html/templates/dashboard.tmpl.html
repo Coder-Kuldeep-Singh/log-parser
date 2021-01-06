@@ -5,42 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analytic Dashboard(Log-Parser)</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
+        		#map {
+			height: 300px;
+		}
     </style>
 </head>
 <body>
-    <h1>
-        {{.TotalHits}}
-    </h1>
-    <span>
-        Website Hits
-    </span>
-    <!-- {{range .Location}}
-        {{.Latitude}},{{.Longitude}}</br>
-    {{end}} -->
-    <div style="padding:10px;">
-        <div style="width: 30%;float: left;">
-            <canvas id="IPChart" width="400" height="400"></canvas>
-        </div>
-        <!-- <div style="width: 30%;float: right;">
-            <canvas id="URLChart" width="400" height="400"></canvas>
-        </div> -->
-        <div style="width: 30%;float: left;">
-            <canvas id="MethodChart" width="400" height="400"></canvas>
+    <div class="jumbotron jumbotron-fluid card bg-white text-dark" style="padding:20px;margin:5px;">
+        <footer class="blockquote-footer">
+            [Logs] Request Count
+        </footer>
+        <div class="card-body" style="padding:0px;margin:0px;">
+            <center>
+                <h1 class="display-4" style="margin: 0;padding: 0;">
+                    {{.TotalHits}}
+                </h1>
+                <footer class="blockquote-footer">
+                    Website Hits
+                </footer>
+            </center>
         </div>
     </div>
-    <!-- IP chart -->
-    
+    <div class="jumbotron jumbotron-fluid " style="margin-top:5px;padding:5px;">
+        <div class="row" style="margin-top:2px;">
+            <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
+                        <div class="card" style="padding:5px">
+                            <div class="card-body">
+                                <footer class="blockquote-footer">
+                                    [Logs] Request Map
+                                </footer>
+                                <div id="map"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
+                        <div class="card" style="padding:5px">
+                            <div class="card-body">
+                                <footer class="blockquote-footer">
+                                    [Logs] Request HTTP Code
+                                </footer>
+                                <canvas id="HTTPChart" height="auto"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
+                        <div class="card" style="padding:5px">
+                            <div class="card-body">
+                                <footer class="blockquote-footer">
+                                    [Logs] Request IP
+                                </footer>
+                                <canvas id="IPChart" height="auto"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <footer class="blockquote-footer">
+                                    [Logs] Request Country
+                                </footer>
+                                <canvas id="CountryChart" height="700px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <footer class="blockquote-footer">
+                                    [Logs] Request Methods
+                                </footer>
+                                <canvas id="MethodChart" height="500px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
+        Chart.defaults.global.defaultFontFamily = "'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+        Chart.defaults.global.legend.position = 'bottom';
+        Chart.defaults.global.legend.labels.usePointStyle = true;
+        Chart.defaults.global.legend.labels.boxWidth = 15;
+        Chart.defaults.global.tooltips.backgroundColor = '#000';
         var ctx = document.getElementById('IPChart').getContext('2d');
         var myChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: [{{range $key,$value := .IPS}} '{{$key}}', {{end}}],
                 datasets: [{
                     label: "Visited IPS",
                     data: [{{range $value := .IPS}} {{$value}}, {{end}}],
-                    borderWidth: 1
+                    borderWidth: 3
                 }]
             },
             options: {
@@ -54,51 +127,122 @@
             }
         });
     </script>
-    <!-- <script>
-        var nctx = document.getElementById('URLChart').getContext('2d');
-        var URLChart = new Chart(nctx, {
-            type: 'bar',
+    <script>
+        var hctx = document.getElementById('HTTPChart').getContext('2d');
+        var HTTPChart = new Chart(hctx, {
+            type: 'pie',
             data: {
-                // labels: [{{range $key,$value := .URLS}} '{{$key}}', {{end}}],
+                labels: [{{range $key,$value := .HTTPCODE}} '{{$key}}', {{end}}],
                 datasets: [{
-                    label: "Visited URLS",
-                    data: [{{range $value := .URLS}} {{$value}}, {{end}}],
-                    borderWidth: 1
+                    label: "Visited IPS",
+                    data: [{{range $value := .HTTPCODE}} {{$value}}, {{end}}],
+                    borderWidth: 2,
+                    hoverBorderWidth: 10,
+                    backgroundColor: [
+                        "#f38b4a",
+                        "#56d798",
+                        "#ff8397",
+                        "#6970d5",
+                        "#4350D5",
+                        "#ff50D5",
+                        "#ff41E5",
+                        "#62ff0D",
+                    ],
                 }]
             },
             options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
+                legend: {
+                labels: {
+                    padding: 20
+                    }
                 }
             }
         });
-        </script> -->
+    </script>
+    <script>
+        var nctx = document.getElementById('CountryChart').getContext('2d');
+        var URLChart = new Chart(nctx, {
+            type: 'pie',
+            data: {
+                labels: [{{range $key,$value := .Countries}} "{{$key}}", {{end}}],
+                datasets: [{
+                    label: "Visited URLS",
+                    data: [{{range $value := .Countries}} {{$value}}, {{end}}],
+                    borderWidth: 2,
+                    hoverBorderWidth: 10,
+                }]
+            },
+            options: {
+                legend: {
+                labels: {
+                    padding: 20
+                    }
+                }
+            }
+            // options: {
+            //     scales: {
+            //         yAxes: [{
+            //             ticks: {
+            //                 beginAtZero: true
+            //             }
+            //         }]
+            //     }
+            // }
+        });
+        </script>
         <script>
             var Mctx = document.getElementById('MethodChart').getContext('2d');
             var myChart = new Chart(Mctx, {
-                type: 'line',
+                type: 'pie',
                 data: {
                     labels: [{{range $key,$value := .Methods}} '{{$key}}', {{end}}],
                     datasets: [{
                         label: "Visited IPS",
                         data: [{{range $value := .Methods}} {{$value}}, {{end}}],
-                        borderWidth: 1
+                        borderWidth: 2,
+                        hoverBorderWidth: 10,
                     }]
                 },
                 options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
+                     legend: {
+                        labels: {
+                            padding: 20
                             }
-                        }]
                     }
                 }
+                // options: {
+                //     scales: {
+                //         yAxes: [{
+                //             ticks: {
+                //                 beginAtZero: true
+                //             }
+                //         }]
+                //     }
+                // }
             });
+        </script>
+        <script>
+            var cities = L.layerGroup();
+            {{range .Location}}
+                L.marker([{{.Latitude}},{{.Longitude}}]).bindPopup({{.City}}).addTo(cities),
+            {{end}}
+            L.marker([{{.LastLocation.Latitude}},{{.LastLocation.Longitude}}]).bindPopup({{.LastLocation.City}}).addTo(cities);
+            var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+            var grayscale   = L.tileLayer(mbUrl,{id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1}),
+                streets  = L.tileLayer(mbUrl,{id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1});
+            var map = L.map('map', {
+                center: [8.7832, 34.5085],
+                zoom: 2,
+                layers: [grayscale,cities]
+            });
+            var baseLayers = {
+                "Grayscale": grayscale,
+                "Streets": streets,
+            };
+            var overlays = {
+                "Cities":cities
+            };
+            L.control.layers(baseLayers, overlays).addTo(map);
         </script>
 </body>
 </html>
