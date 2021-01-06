@@ -2,7 +2,6 @@ package models
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"regexp"
@@ -80,24 +79,6 @@ func ReadFile(outcome *os.File) []Logs {
 	return rows
 }
 
-// chanToSlice() converts chan []string to []string
-func chanToSlice(records chan []string) []string {
-	get := []string{}
-	for record := range records {
-		for _, found := range record {
-			get = append(get, found)
-		}
-	}
-	return get
-}
-
-// printrecords prints the chan data
-func printrecords(records chan []string) {
-	for record := range records {
-		fmt.Println(record)
-	}
-}
-
 // regularExpression runs the expression on the given data and return back the parse data
 func regularExpression(MatchedCase string, resp string) [][]string {
 	re := regexp.MustCompile(MatchedCase)
@@ -106,3 +87,14 @@ func regularExpression(MatchedCase string, resp string) [][]string {
 	}
 	return nil
 }
+
+// UploadLogs inserts the logs into database
+// func UploadLogs(path string) []Logs {
+// 	file, err := OpenFile(path)
+// 	err = ErrorHandling(err, "error to open file", WARNING)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return []Logs{}
+// 	}
+// 	return ReadFile(file)
+// }
