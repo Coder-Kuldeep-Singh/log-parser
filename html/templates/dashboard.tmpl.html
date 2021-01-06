@@ -70,6 +70,28 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
+                        <div class="card" style="padding:5px">
+                            <div class="card-body">
+                                <footer class="blockquote-footer">
+                                    [Logs] Request HTTP Error
+                                </footer>
+                                <canvas id="HTTPErrorChart" height="auto"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
+                        <div class="card" style="padding:5px">
+                            <div class="card-body">
+                                <footer class="blockquote-footer">
+                                    [Logs] Request IP
+                                </footer>
+                                <canvas id="IPChart" height="auto"></canvas>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
             </div>
             <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
                 <div class="row">
@@ -79,7 +101,7 @@
                                 <footer class="blockquote-footer">
                                     [Logs] Request Country
                                 </footer>
-                                <canvas id="CountryChart" height="700px"></canvas>
+                                <canvas id="CountryChart" height="auto"></canvas>
                             </div>
                         </div>
                     </div>
@@ -123,6 +145,38 @@
                             beginAtZero: true
                         }
                     }]
+                }
+            }
+        });
+    </script>
+    <script>
+        var hectx = document.getElementById('HTTPErrorChart').getContext('2d');
+        var HTTPErrorChart = new Chart(hectx, {
+            type: 'pie',
+            data: {
+                labels: [{{range $key,$value := .HTTPERROR}} '{{$key}}', {{end}}],
+                datasets: [{
+                    label: "Visited IPS",
+                    data: [{{range $value := .HTTPERROR}} {{$value}}, {{end}}],
+                    borderWidth: 2,
+                    hoverBorderWidth: 10,
+                    backgroundColor: [
+                        "#f38b4a",
+                        "#56d798",
+                        "#ff8397",
+                        "#6970d5",
+                        "#4350D5",
+                        "#ff50D5",
+                        "#ff41E5",
+                        "#62ff0D",
+                    ],
+                }]
+            },
+            options: {
+                legend: {
+                labels: {
+                    padding: 20
+                    }
                 }
             }
         });
