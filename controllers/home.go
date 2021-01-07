@@ -11,7 +11,7 @@ import (
 	geo "github.com/oschwald/geoip2-golang"
 )
 
-func openLocationDB(dbPath string) (*geo.Reader, error) {
+func OpenLocationDB(dbPath string) (*geo.Reader, error) {
 	db, err := geo.Open(dbPath)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func MainDashboard(c *gin.Context) {
 
 	ips := getIPCounts(updateQueue)
 	Location := []service.Location{}
-	db, err := openLocationDB("./db/GeoLite2-City.mmdb")
+	db, err := OpenLocationDB("./db/GeoLite2-City.mmdb")
 	err = models.ErrorHandling(err, "error to open the location database", models.WARNING)
 	if err != nil {
 		log.Println(err)
