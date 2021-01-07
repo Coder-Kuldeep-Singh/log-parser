@@ -18,6 +18,15 @@ type Location struct {
 	City        string  `json:"city"`
 }
 
+// OpenLocationDB  opens the mmdb database
+func OpenLocationDB(dbPath string) (*geo.Reader, error) {
+	db, err := geo.Open(dbPath)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
+
 // GetLocationFromIP return the location of the ip address
 func GetLocationFromIP(db *geo.Reader, ip string) Location {
 	if len(ip) == 0 {
