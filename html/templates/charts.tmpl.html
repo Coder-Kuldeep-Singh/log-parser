@@ -1,0 +1,161 @@
+{{define "charts"}}
+<script>
+    Chart.defaults.global.defaultFontFamily = "'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
+    Chart.defaults.global.legend.position = 'bottom';
+    Chart.defaults.global.legend.labels.usePointStyle = true;
+    Chart.defaults.global.legend.labels.boxWidth = 15;
+    Chart.defaults.global.tooltips.backgroundColor = '#000';
+    var ctx = document.getElementById('IPChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{{range $key,$value := .IPS}} '{{$key}}', {{end}}],
+            datasets: [{
+                label: "Visited IPS",
+                data: [{{range $value := .IPS}} {{$value}}, {{end}}],
+                borderWidth: 3
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+<script>
+    var hectx = document.getElementById('HTTPErrorChart').getContext('2d');
+    var HTTPErrorChart = new Chart(hectx, {
+        type: 'pie',
+        data: {
+            labels: [{{range $key,$value := .HTTPERROR}} '{{$key}}', {{end}}],
+            datasets: [{
+                label: "Visited IPS",
+                data: [{{range $value := .HTTPERROR}} {{$value}}, {{end}}],
+                borderWidth: 2,
+                hoverBorderWidth: 10,
+                backgroundColor: [
+                    "#f38b4a",
+                    "#56d798",
+                    "#ff8397",
+                    "#6970d5",
+                    "#4350D5",
+                    "#ff50D5",
+                    "#ff41E5",
+                    "#62ff0D",
+                ],
+            }]
+        },
+        options: {
+            legend: {
+            labels: {
+                padding: 20
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var hctx = document.getElementById('HTTPChart').getContext('2d');
+    var HTTPChart = new Chart(hctx, {
+        type: 'pie',
+        data: {
+            labels: [{{range $key,$value := .HTTPCODE}} '{{$key}}', {{end}}],
+            datasets: [{
+                label: "Visited IPS",
+                data: [{{range $value := .HTTPCODE}} {{$value}}, {{end}}],
+                borderWidth: 2,
+                hoverBorderWidth: 10,
+                backgroundColor: [
+                    "#f38b4a",
+                    "#56d798",
+                    "#ff8397",
+                    "#6970d5",
+                    "#4350D5",
+                    "#ff50D5",
+                    "#ff41E5",
+                    "#62ff0D",
+                ],
+            }]
+        },
+        options: {
+            legend: {
+            labels: {
+                padding: 20
+                }
+            }
+        }
+    });
+</script>
+<script>
+    var nctx = document.getElementById('CountryChart').getContext('2d');
+    var URLChart = new Chart(nctx, {
+        type: 'pie',
+        data: {
+            labels: [{{range $key,$value := .Countries}} "{{$key}}", {{end}}],
+            datasets: [{
+                label: "Visited URLS",
+                data: [{{range $value := .Countries}} {{$value}}, {{end}}],
+                borderWidth: 2,
+                hoverBorderWidth: 10,
+            }]
+        },
+        options: {
+            legend: {
+            labels: {
+                padding: 20
+                }
+            }
+        }
+    });
+    </script>
+    <script>
+        var Mctx = document.getElementById('MethodChart').getContext('2d');
+        var myChart = new Chart(Mctx, {
+            type: 'pie',
+            data: {
+                labels: [{{range $key,$value := .Methods}} '{{$key}}', {{end}}],
+                datasets: [{
+                    label: "Visited IPS",
+                    data: [{{range $value := .Methods}} {{$value}}, {{end}}],
+                    borderWidth: 2,
+                    hoverBorderWidth: 10,
+                }]
+            },
+            options: {
+                 legend: {
+                    labels: {
+                        padding: 20
+                        }
+                }
+            }
+        });
+    </script>
+    <script>
+        var cities = L.layerGroup();
+        {{range .Location}}
+            L.marker([{{.Latitude}},{{.Longitude}}]).bindPopup({{.City}}).addTo(cities),
+        {{end}}
+        L.marker([{{.LastLocation.Latitude}},{{.LastLocation.Longitude}}]).bindPopup({{.LastLocation.City}}).addTo(cities);
+        var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+        var grayscale   = L.tileLayer(mbUrl,{id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1}),
+            streets  = L.tileLayer(mbUrl,{id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1});
+        var map = L.map('map', {
+            center: [8.7832, 34.5085],
+            zoom: 2,
+            layers: [grayscale,cities]
+        });
+        var baseLayers = {
+            "Grayscale": grayscale,
+            "Streets": streets,
+        };
+        var overlays = {
+            "Cities":cities
+        };
+        L.control.layers(baseLayers, overlays).addTo(map);
+    </script>
+{{end}}
