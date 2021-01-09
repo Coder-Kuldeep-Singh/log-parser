@@ -21,7 +21,7 @@ func OpenLocationDB(dbPath string) (*geo.Reader, error) {
 
 // MainDashboard holds the combination of all the analysis on the same page
 func MainDashboard(c *gin.Context) {
-	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1", "./html/static/nginx/access.log.2", "./html/static/nginx/access.log.3", "./html/static/nginx/access.log.4", "./html/static/nginx/access.log.5", "./html/static/nginx/access.log.6", "./html/static/nginx/access.log.7", "./html/static/nginx/access.log.8"}
+	f := []string{"./html/static/nginx/access.log"}
 	queue := [][]models.Logs{}
 	for _, path := range f {
 		log.Printf("File Processing Start : [%s]", path)
