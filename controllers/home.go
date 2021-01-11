@@ -21,7 +21,7 @@ func OpenLocationDB(dbPath string) (*geo.Reader, error) {
 
 // MainDashboard holds the combination of all the analysis on the same page
 func MainDashboard(c *gin.Context) {
-	f := []string{"./html/static/nginx/access.log"}
+	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1"}
 	queue := [][]models.Logs{}
 	for _, path := range f {
 		log.Printf("File Processing Start : [%s]", path)
@@ -57,14 +57,14 @@ func MainDashboard(c *gin.Context) {
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
 		"TotalHits": len(updateQueue),
 		// "VisitedIP": UniqueIP(updateQueue),
-		"IPS":          ips,
+		"IPS":          Nmaximum(ips, 1),
 		"Location":     Location[0 : len(Location)-2],
 		"LastLocation": lastElement,
-		"URLS":         GetUniqueURLQueue(updateQueue),
-		"Methods":      GetUniqueMethodQueue(updateQueue),
-		"Countries":    GetCountries(Location),
-		"HTTPCODE":     getHTTPCode(updateQueue),
-		"HTTPERROR":    getTheErrorStatus(updateQueue),
+		"URLS":         Nmaximum(GetUniqueURLQueue(updateQueue), 1),
+		"Methods":      Nmaximum(GetUniqueMethodQueue(updateQueue), 1),
+		"Countries":    Nmaximum(GetCountries(Location), 1),
+		"HTTPCODE":     Nmaximum(getHTTPCode(updateQueue), 1),
+		"HTTPERROR":    Nmaximum(getTheErrorStatus(updateQueue), 1),
 	})
 }
 
@@ -95,6 +95,28 @@ func ReportIP(c *gin.Context) {
 	})
 }
 
+// Nmaximum returns the Nth maximum numbers
+func Nmaximum(values map[string]int, N int) map[string]int {
+	// if len(values) < N {
+	// 	N = len(values)
+	// }
+	parsed := make(map[string]int)
+	for i := 0; i < N; i++ {
+		max := 0
+		kk := ""
+		for key, value := range values {
+			if value > max {
+				max = value
+				kk = key
+			}
+			delete(values, kk)
+			parsed[kk] = max
+		}
+	}
+	// log.Println(parsed)
+	return parsed
+}
+
 // UniqueIP eliminates the duplicate data and returns back the unique ips
 func UniqueIP(queue []models.Logs) []string {
 	keys := make(map[string]bool)
@@ -115,6 +137,9 @@ func GetCountries(queue []service.Location) map[string]int {
 	list := make(map[string]int)
 	log.Println("Processing: Generating unique Countries")
 	for _, entry := range queue {
+		if len(entry.Country) == 0 {
+			continue
+		}
 		list[entry.Country]++
 	}
 	log.Println("Processing: End")
