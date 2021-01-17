@@ -15,6 +15,11 @@ func main() {
 		log.Fatal("Error loading .env file -> ", err)
 		return
 	}
+	controllers.LoadGlobally()
+	controllers.GetUniqueURLQueue()
+	controllers.GetUniqueMethodQueue()
+	controllers.GetHTTPCode()
+	controllers.GetTheErrorStatus()
 	// update ip2location data every day
 	go controllers.IP2Location()
 	//setup routes
