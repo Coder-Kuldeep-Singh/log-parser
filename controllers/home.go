@@ -11,16 +11,12 @@ import (
 	geo "github.com/oschwald/geoip2-golang"
 )
 
-func OpenLocationDB(dbPath string) (*geo.Reader, error) {
-	db, err := geo.Open(dbPath)
-	if err != nil {
-		return nil, err
-	}
-	return db, nil
-}
+var (
+	updateQueue []models.Logs
+)
 
-// MainDashboard holds the combination of all the analysis on the same page
-func MainDashboard(c *gin.Context) {
+// LoadGlobally loads the data globally
+func LoadGlobally() {
 	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1"}
 	queue := [][]models.Logs{}
 	for _, path := range f {
@@ -35,12 +31,20 @@ func MainDashboard(c *gin.Context) {
 		queue = append(queue, models.ReadFile(file))
 		log.Printf("File Processing End : [%s]", path)
 	}
-	updateQueue := UpdatedQueue(queue)
-	// removed the all data from the  [][]Logs
-	log.Println("Processing: Deleting the Old queue so we can use the Memory for other queues")
-	queue = nil
-	log.Println("Processing: End")
+	updateQueue = UpdatedQueue(queue)
+}
 
+// OpenLocationDB open the location database
+func OpenLocationDB(dbPath string) (*geo.Reader, error) {
+	db, err := geo.Open(dbPath)
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
+}
+
+// MainDashboard holds the combination of all the analysis on the same page
+func MainDashboard(c *gin.Context) {
 	ips := getIPCounts(updateQueue)
 	Location := []service.Location{}
 	db, err := OpenLocationDB("./db/GeoLite2-City.mmdb")
@@ -69,37 +73,15 @@ func MainDashboard(c *gin.Context) {
 }
 
 // ReportIP generates the report of ip
-func ReportIP(c *gin.Context) {
-	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1", "./html/static/nginx/access.log.2"}
-	queue := [][]models.Logs{}
-	for _, path := range f {
-		log.Printf("File Processing Start : [%s]", path)
-		file, err := models.OpenFile(path)
-		err = models.ErrorHandling(err, "error to open file", models.WARNING)
-		if err != nil {
-			log.Println(err)
-			// return
-			continue
-		}
-		queue = append(queue, models.ReadFile(file))
-		log.Printf("File Processing End : [%s]", path)
-	}
-	updateQueue := UpdatedQueue(queue)
-	// removed the all data from the  [][]Logs
-	log.Println("Processing: Deleting the Old queue so we can use the Memory for other queues")
-	queue = nil
-	log.Println("Processing: End")
-	c.HTML(http.StatusOK, "reportip.tmpl.html", gin.H{
-		"IP":   getIPCounts(updateQueue),
-		"Logs": updateQueue,
-	})
-}
+// func ReportIP(c *gin.Context) {
+// 	c.HTML(http.StatusOK, "reportip.tmpl.html", gin.H{
+// 		"IP":   getIPCounts(updateQueue),
+// 		"Logs": updateQueue,
+// 	})
+// }
 
 // Nmaximum returns the Nth maximum numbers
 func Nmaximum(values map[string]int, N int) map[string]int {
-	// if len(values) < N {
-	// 	N = len(values)
-	// }
 	parsed := make(map[string]int)
 	for i := 0; i < N; i++ {
 		max := 0
@@ -113,7 +95,6 @@ func Nmaximum(values map[string]int, N int) map[string]int {
 			parsed[kk] = max
 		}
 	}
-	// log.Println(parsed)
 	return parsed
 }
 
@@ -221,3 +202,5 @@ func getTheErrorStatus(record []models.Logs) map[string]int {
 	log.Println("Processing: End")
 	return queue
 }
+
+// func getDuplicate
