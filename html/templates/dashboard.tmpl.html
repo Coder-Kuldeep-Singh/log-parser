@@ -23,7 +23,10 @@
 </head>
 <body>
     {{template "header" .}}
-    {{template "body" .}}
+    <div class="row">
+        {{template "sidebar" .}}
+        {{template "body" .}}
+    </div>
     {{template "charts" .}}
 </body>
 </html>
