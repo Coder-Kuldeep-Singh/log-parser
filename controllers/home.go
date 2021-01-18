@@ -49,11 +49,17 @@ func MainDashboard(c *gin.Context) {
 	// log.Println(UpdateQueue)
 	code := RequestsCode(UpdateQueue)
 	errorCode := GetTheErrorStatus(UpdateQueue)
+	topIps := GetIPs(UpdateQueue)
+	methods := GetMethods(UpdateQueue)
+	referrer := GetReferrer(UpdateQueue)
 	// log.Println(Nmaximum(code, 3))
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
 		"TotalHits": len(UpdateQueue),
 		"HTTPCode":  Nmaximum(code, 5),
 		"HTTPError": Nmaximum(errorCode, 3),
+		"TopIPS":    Nmaximum(topIps, 10),
+		"Methods":   Nmaximum(methods, 3),
+		"Referrer":  Nmaximum(referrer, 10),
 		// "Countries":    GetCountries(Location),
 		// "HTTPCODE":     getHTTPCode(updateQueue),
 		// "HTTPERROR":    getTheErrorStatus(updateQueue),
