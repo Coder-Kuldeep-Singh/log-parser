@@ -23,6 +23,7 @@ type Logs struct {
 	ProtocolMethod string `json:"protocol_method"`
 	ServerResponse string `json:"http_status"`
 	SendBytes      string `json:"sent_bytes"`
+	ReferrerURL    string `json:"referrer_url"`
 	UserAgent      string `json:"user_agent"`
 	// browser        string
 	// system         string
@@ -71,6 +72,7 @@ func ReadFile(outcome *os.File) []Logs {
 			ProtocolMethod: matched[0][7],
 			ServerResponse: matched[0][8],
 			SendBytes:      matched[0][9],
+			ReferrerURL:    matched[0][10],
 			UserAgent:      matched[0][11],
 			// browser        :,
 			// system         :,
