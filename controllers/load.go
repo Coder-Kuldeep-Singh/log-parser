@@ -58,9 +58,10 @@ func GetCountries(queue []service.Location) {
 
 		if exist {
 			countries[item.Country]++ // increase counter by 1 if already in the map
-		} else {
-			countries[item.Country] = 1 // else start counting from 1
 		}
+		// else {
+		// 	countries[item.Country] = 1 // else start counting from 1
+		// }
 	}
 	log.Println("Processing: End")
 }
@@ -73,9 +74,9 @@ func GetUniqueURLQueue() {
 		_, exist := uniqueurlqueue[item.URL]
 		if exist {
 			uniqueurlqueue[item.URL]++ // increase counter by 1 if already in the map
-		} else {
-			uniqueurlqueue[item.URL] = 1 // else start counting from 1
+			// continue
 		}
+		// uniqueurlqueue[item.URL] = 1 // else start counting from 1
 	}
 	log.Println("Processing: End")
 }
@@ -87,9 +88,10 @@ func GetUniqueMethodQueue() {
 		_, exist := methodQueue[item.Method]
 		if exist {
 			methodQueue[item.Method]++ // increase counter by 1 if already in the map
-		} else {
-			methodQueue[item.Method] = 1 // else start counting from 1
 		}
+		// else {
+		// 	methodQueue[item.Method] = 1 // else start counting from 1
+		// }
 	}
 	log.Println("Processing: End")
 }
@@ -100,9 +102,10 @@ func getIPCounts() {
 		_, exist := ipQueue[item.IP]
 		if exist {
 			ipQueue[item.IP]++ // increase counter by 1 if already in the map
-		} else {
-			ipQueue[item.IP] = 1 // else start counting from 1
 		}
+		// else {
+		// 	ipQueue[item.IP] = 1 // else start counting from 1
+		// }
 	}
 	log.Println("Processing: End")
 }
@@ -126,9 +129,10 @@ func GetHTTPCode() {
 		_, exist := httpQueue[item.ServerResponse]
 		if exist {
 			httpQueue[item.ServerResponse]++ // increase counter by 1 if already in the map
-		} else {
-			httpQueue[item.ServerResponse] = 1 // else start counting from 1
 		}
+		// else {
+		// 	httpQueue[item.ServerResponse] = 1 // else start counting from 1
+		// }
 	}
 	log.Println("Processing: End")
 }
