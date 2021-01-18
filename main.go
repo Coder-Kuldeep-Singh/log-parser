@@ -16,9 +16,10 @@ func main() {
 		return
 	}
 	controllers.LoadGlobally()
-	controllers.GetUniqueURLQueue()
-	controllers.GetUniqueMethodQueue()
-	controllers.GetHTTPCode()
+	// log.Println(controllers.UpdateQueue)
+	// controllers.GetUniqueURLQueue()
+	// controllers.GetUniqueMethodQueue()
+	// controllers.GetHTTPCode()
 	// controllers.GetTheErrorStatus()
 	// update ip2location data every day
 	go controllers.IP2Location()
