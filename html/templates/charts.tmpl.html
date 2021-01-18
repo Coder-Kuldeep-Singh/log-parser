@@ -1,5 +1,5 @@
 {{define "charts"}}
-<script>
+<!-- <script>
     Chart.defaults.global.defaultFontFamily = "'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
     Chart.defaults.global.legend.position = 'bottom';
     Chart.defaults.global.legend.labels.usePointStyle = true;
@@ -157,5 +157,282 @@
             "Cities":cities
         };
         L.control.layers(baseLayers, overlays).addTo(map);
-    </script>
+    </script> -->
+<script>
+    var cities = L.layerGroup();
+
+    L.marker([39.61, -105.02]).bindPopup('This is Littleton, CO.').addTo(cities),
+        L.marker([39.74, -104.99]).bindPopup('This is Denver, CO.').addTo(cities),
+        L.marker([39.73, -104.8]).bindPopup('This is Aurora, CO.').addTo(cities),
+        L.marker([39.77, -105.23]).bindPopup('This is Golden, CO.').addTo(cities);
+
+
+    var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+
+    var grayscale = L.tileLayer(mbUrl, {
+        id: 'mapbox/light-v9',
+        tileSize: 512,
+        zoomOffset: -1,
+        attribution: mbAttr
+    }),
+        streets = L.tileLayer(mbUrl, {
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            attribution: mbAttr
+        });
+
+    var map = L.map('map', {
+        center: [39.73, -104.99],
+        zoom: 10,
+        layers: [grayscale, cities]
+    });
+
+    var baseLayers = {
+        "Grayscale": grayscale,
+        "Streets": streets
+    };
+
+    var overlays = {
+        "Cities": cities
+    };
+
+    L.control.layers(baseLayers, overlays).addTo(map);
+</script>
+<script>
+    var ctx = document.getElementById('HTTPChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [{{ range $key, $value:= .HTTPCode }} '{{$key}}', {{ end }}],
+    datasets: [{
+        label: 'Top 5 HTTP Status Code',
+        data: [{{ range $key, $value:= .HTTPCode }} '{{$value}}', {{ end }}],
+        backgroundColor: [
+            'rgb(154, 205, 50)',
+            'rgb(43, 70, 117)',
+            'rgb(124, 0, 97)',
+            'rgb(18, 208, 237)',
+            'rgb(223, 41, 95)'
+        ],
+            borderColor: [
+                'rgb(154, 205, 50)',
+                'rgb(43, 70, 117)',
+                'rgb(124, 0, 97)',
+                'rgb(18, 208, 237)',
+                'rgb(223, 41, 95)'
+            ],
+                borderWidth: 3
+            }]
+        },
+    options: {
+        legend: {
+            display: true,
+                labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            },
+            position: 'right',
+                align: 'center'
+        }
+    }
+    });
+</script>
+
+<script>
+    var ctx = document.getElementById('HTTPErrorChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [{{ range $key, $value:= .HTTPError }} '{{$key}}', {{ end }}],
+    datasets: [{
+        label: 'Top 3 HTTP Error Status Code',
+        data: [{{ range $key, $value:= .HTTPError }} '{{$value}}', {{ end }}],
+        backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)'
+        ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)'
+            ],
+                borderWidth: 3
+            }]
+        },
+    options: {
+        legend: {
+            display: true,
+                labels: {
+                fontColor: 'rgb(255, 99, 132)'
+            },
+            position: 'right',
+                align: 'center'
+        }
+    }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('SentBytes').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                // backgroundColor: [
+                //     'rgb(255, 99, 132)',
+                //     'rgb(54, 162, 235)',
+                //     'rgb(255, 206, 86)',
+                //     'rgb(75, 192, 192)',
+                //     'rgb(153, 102, 255)',
+                //     'rgb(255, 159, 64)'
+                // ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                borderWidth: 3
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    // ticks: {
+                    //     beginAtZero: true
+                    // },
+                    stacked: true
+                }]
+            }
+        }
+    });
+</script>
+</script>
+
+<script>
+    var ctx = document.getElementById('IPChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('ReferrerChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    var ctx = document.getElementById('DeviceChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 206, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(153, 102, 255)',
+                    'rgb(255, 159, 64)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+                display: true,
+                labels: {
+                    fontColor: 'rgb(255, 99, 132)'
+                },
+                position: 'right',
+                align: 'center'
+            }
+        }
+    });
+</script>
 {{end}}
