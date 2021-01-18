@@ -19,7 +19,7 @@ func main() {
 	controllers.GetUniqueURLQueue()
 	controllers.GetUniqueMethodQueue()
 	controllers.GetHTTPCode()
-	controllers.GetTheErrorStatus()
+	// controllers.GetTheErrorStatus()
 	// update ip2location data every day
 	go controllers.IP2Location()
 	//setup routes
