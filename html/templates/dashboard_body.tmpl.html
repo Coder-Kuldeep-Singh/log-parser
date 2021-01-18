@@ -194,9 +194,27 @@
                     <div class="card" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
-                                [Logs] Request Referrer
+                                [Logs] Top 10 Referrer URL
                             </footer>
-                            <canvas id="ReferrerChart" height="auto"></canvas>
+                            <div class="table-responsive table-responsive-sm">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Referrer URL</th>
+                                            <th>Count</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{ range $key, $value:= .Referrer }}
+                                        <tr>
+                                            <td>{{$key}}</td>
+                                            <td>{{$value}}</td>
+                                        </tr>
+                                        {{ end }}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <canvas id="ReferrerChart" height="auto"></canvas> -->
                         </div>
                     </div>
                 </div>
@@ -204,7 +222,7 @@
                     <div class="card" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
-                                [Logs] Request Device
+                                [Logs] Top 3 Used Methods
                             </footer>
                             <canvas id="DeviceChart" height="auto"></canvas>
                         </div>
