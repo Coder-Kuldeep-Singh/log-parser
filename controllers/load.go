@@ -15,10 +15,6 @@ var (
 	Countries map[string]int
 	// Uniqueurlqueue going to holds uniqueURL data
 	Uniqueurlqueue map[string]int
-	// MethodQueue going to holds Methods data
-	MethodQueue map[string]int
-	// IPQueue going to holds ips data
-	IPQueue map[string]int
 	// HTTPErrorCodeQueue going to holds http error code data
 	HTTPErrorCodeQueue map[string]int
 )
@@ -106,6 +102,60 @@ func GetTheErrorStatus(queue []models.Logs) map[string]int {
 	}
 	log.Println("Processing: End")
 	return httpErrorCodeQueue
+}
+
+// GetIPs returns back the ips and the counts
+func GetIPs(queue []models.Logs) map[string]int {
+	IPQueue := make(map[string]int)
+	log.Println("Processing: Counting the ips")
+	for _, item := range queue {
+		_, exist := IPQueue[item.IP]
+		if exist {
+			IPQueue[item.IP]++ // increase counter by 1 if already in the map
+		} else {
+			IPQueue[item.IP] = 1 // else start counting from 1
+		}
+	}
+	log.Println("Processing: End")
+	return IPQueue
+
+}
+
+// GetMethods returns back the used method counts
+func GetMethods(queue []models.Logs) map[string]int {
+	MethodQueue := make(map[string]int)
+	log.Println("Processing: Counting the used methods")
+	for _, item := range queue {
+		_, exist := MethodQueue[item.Method]
+		if exist {
+			MethodQueue[item.Method]++ // increase counter by 1 if already in the map
+		} else {
+			MethodQueue[item.Method] = 1 // else start counting from 1
+		}
+	}
+	log.Println("Processing: End")
+	return MethodQueue
+
+}
+
+// GetReferrer returns back the used method counts
+func GetReferrer(queue []models.Logs) map[string]int {
+	ReferrerQueue := make(map[string]int)
+	log.Println("Processing: Counting the referrer url")
+	for _, item := range queue {
+		if item.ReferrerURL == "" || len(item.ReferrerURL) <= 3 {
+			continue
+		}
+		_, exist := ReferrerQueue[item.ReferrerURL]
+		if exist {
+			ReferrerQueue[item.ReferrerURL]++ // increase counter by 1 if already in the map
+		} else {
+			ReferrerQueue[item.ReferrerURL] = 1 // else start counting from 1
+		}
+	}
+	log.Println("Processing: End")
+	return ReferrerQueue
+
 }
 
 // // UniqueIP eliminates the duplicate data and returns back the unique ips
