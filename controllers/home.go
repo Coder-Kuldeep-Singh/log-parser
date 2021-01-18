@@ -1,33 +1,11 @@
 package controllers
 
 import (
-	"log"
-	"log-parser/models"
-	"log-parser/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	geo "github.com/oschwald/geoip2-golang"
 )
-
-// LoadGlobally loads the data globally
-func LoadGlobally() {
-	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1"}
-	queue := [][]models.Logs{}
-	for _, path := range f {
-		log.Printf("File Processing Start : [%s]", path)
-		file, err := models.OpenFile(path)
-		err = models.ErrorHandling(err, "error to open file", models.WARNING)
-		if err != nil {
-			log.Println(err)
-			// return
-			continue
-		}
-		queue = append(queue, models.ReadFile(file))
-		log.Printf("File Processing End : [%s]", path)
-	}
-	updateQueue = UpdatedQueue(queue)
-}
 
 // OpenLocationDB open the location database
 func OpenLocationDB(dbPath string) (*geo.Reader, error) {
@@ -39,27 +17,43 @@ func OpenLocationDB(dbPath string) (*geo.Reader, error) {
 }
 
 // MainDashboard holds the combination of all the analysis on the same page
+// func MainDashboard(c *gin.Context) {
+// 	Location := []service.Location{}
+// 	db, err := OpenLocationDB("./db/GeoLite2-City.mmdb")
+// 	err = models.ErrorHandling(err, "error to open the location database", models.WARNING)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return
+// 	}
+// 	for key := range ipQueue {
+// 		Location = append(Location, service.GetLocationFromIP(db, key))
+// 	}
+// 	db.Close()
+// 	lastElement := Location[len(Location)-1]
+// 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
+// 		"TotalHits": len(updateQueue),
+// 		// "VisitedIP": UniqueIP(updateQueue),
+// 		"IPS":          ipQueue,
+// 		"Location":     Location[0 : len(Location)-2],
+// 		"LastLocation": lastElement,
+// 		"URLS":         uniqueurlqueue,
+// 		"Methods":      methodQueue,
+// 		// "Countries":    GetCountries(Location),
+// 		// "HTTPCODE":     getHTTPCode(updateQueue),
+// 		// "HTTPERROR":    getTheErrorStatus(updateQueue),
+// 	})
+// }
+
+// MainDashboard holds the combination of all the analysis on the same page
 func MainDashboard(c *gin.Context) {
-	Location := []service.Location{}
-	db, err := OpenLocationDB("./db/GeoLite2-City.mmdb")
-	err = models.ErrorHandling(err, "error to open the location database", models.WARNING)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	for key := range ipQueue {
-		Location = append(Location, service.GetLocationFromIP(db, key))
-	}
-	db.Close()
-	lastElement := Location[len(Location)-1]
+	// log.Println(UpdateQueue)
+	code := RequestsCode(UpdateQueue)
+	errorCode := GetTheErrorStatus(UpdateQueue)
+	// log.Println(Nmaximum(code, 3))
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
-		"TotalHits": len(updateQueue),
-		// "VisitedIP": UniqueIP(updateQueue),
-		"IPS":          ipQueue,
-		"Location":     Location[0 : len(Location)-2],
-		"LastLocation": lastElement,
-		"URLS":         uniqueurlqueue,
-		"Methods":      methodQueue,
+		"TotalHits": len(UpdateQueue),
+		"HTTPCode":  Nmaximum(code, 5),
+		"HTTPError": Nmaximum(errorCode, 3),
 		// "Countries":    GetCountries(Location),
 		// "HTTPCODE":     getHTTPCode(updateQueue),
 		// "HTTPERROR":    getTheErrorStatus(updateQueue),
