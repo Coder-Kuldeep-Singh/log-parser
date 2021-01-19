@@ -1,112 +1,7 @@
 {{define "body"}}
-<!-- <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12">
-        <div class="jumbotron jumbotron-fluid card bg-white text-dark" style="padding:20px;margin:5px;">
-            <footer class="blockquote-footer">
-                [Logs] Request Count
-            </footer>
-            <div class="card-body" style="padding:0px;margin:0px;">
-                <center>
-                    <h1 class="display-4" style="margin: 0;padding: 0;">
-                        {{.TotalHits}}
-                    </h1>
-                    <footer class="blockquote-footer">
-                        Website Hits
-                    </footer>
-                </center>
-            </div>
-        </div>
-        <div class="jumbotron jumbotron-fluid bg-white text-dark" style="margin-top:5px;padding:5px;">
-            <div class="row" style="margin-top:2px;">
-                <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
-                            <div class="card" style="padding:5px">
-                                <div class="card-body">
-                                    <footer class="blockquote-footer">
-                                        [Logs] Request Map
-                                    </footer>
-                                    <div id="map"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <footer class="blockquote-footer">
-                                        [Logs] Request Country
-                                    </footer>
-                                    <canvas id="CountryChart" height="auto"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                            <div class="card" style="padding:5px">
-                                <div class="card-body">
-                                    <footer class="blockquote-footer">
-                                        [Logs] Request HTTP Code
-                                    </footer>
-                                    <canvas id="HTTPChart" height="auto"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                            <div class="card" style="padding:5px">
-                                <div class="card-body">
-                                    <footer class="blockquote-footer">
-                                        [Logs] Request IP
-                                    </footer>
-                                    <canvas id="IPChart" height="auto"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                            <div class="card" style="padding:5px">
-                                <div class="card-body">
-                                    <footer class="blockquote-footer">
-                                        [Logs] Request HTTP Error
-                                    </footer>
-                                    <canvas id="HTTPErrorChart" height="auto"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                            <div class="card" style="padding:5px">
-                                <div class="card-body">
-                                    <footer class="blockquote-footer">
-                                        [Logs] Request IP
-                                    </footer>
-                                    <canvas id="IPChart" height="auto"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <footer class="blockquote-footer">
-                                        [Logs] Request Methods
-                                    </footer>
-                                    <canvas id="MethodChart" height="500px"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
 <div class="col-lg-10 col-md-12 col-sm-12 col-xs-12" style="margin-bottom: 20px;">
     <div class="row" style="padding:10px;margin:5px">
-        <div class="jumbotron jumbotron-fluid card bg-white text-dark">
+        <div class="jumbotron jumbotron-fluid card bg-dark text-white">
             <div class="card-body" style="padding:0px;margin:0px;">
                 <center>
                     <h1 class="display-4" style="padding: 2px;">
@@ -123,7 +18,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-md-12">
-                    <div class="card" style="padding:5px;">
+                    <div class="card bg-dark text-white" style="padding:5px;">
                         <div class="card-body">
                             <footer class="blockquote-footer">
                                 [Logs] Request Map
@@ -147,7 +42,7 @@
                 </div> -->
             <div class="row" style="margin-top:5px;">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                    <div class="card" style="padding:5px">
+                    <div class="card bg-dark text-white" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
                                 [Logs] Request HTTP Code
@@ -157,7 +52,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                    <div class="card" style="padding:5px">
+                    <div class="card bg-dark text-white" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
                                 [Logs] Request HTTP Error
@@ -169,7 +64,7 @@
             </div>
             <div class="row" style="margin-top:5px;">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                    <div class="card" style="padding:5px">
+                    <div class="card bg-dark text-white" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
                                 [Logs] Sent Bytes
@@ -179,7 +74,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                    <div class="card" style="padding:5px">
+                    <div class="card bg-dark text-white" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
                                 [Logs] Request IP
@@ -191,13 +86,13 @@
             </div>
             <div class="row" style="margin-top:5px;">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                    <div class="card" style="padding:5px">
+                    <div class="card bg-dark text-white" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
                                 [Logs] Top 10 Referrer URL
                             </footer>
                             <div class="table-responsive table-responsive-sm">
-                                <table class="table align-middle">
+                                <table class="table align-middle text-white">
                                     <thead>
                                         <tr>
                                             <th>Referrer URL</th>
@@ -219,7 +114,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
-                    <div class="card" style="padding:5px">
+                    <div class="card bg-dark text-white" style="padding:5px">
                         <div class="card-body">
                             <footer class="blockquote-footer">
                                 [Logs] Top 3 Used Methods
