@@ -218,20 +218,6 @@ func GetReferrer(queue []models.Logs) map[string]int {
 // 	log.Println("Processing: End")
 // }
 
-// func getIPCounts() {
-// 	log.Printf("Processing: Generating IP's Count")
-// 	for _, item := range updateQueue {
-// 		_, exist := ipQueue[item.IP]
-// 		if exist {
-// 			ipQueue[item.IP]++ // increase counter by 1 if already in the map
-// 		}
-// 		// else {
-// 		// 	ipQueue[item.IP] = 1 // else start counting from 1
-// 		// }
-// 	}
-// 	log.Println("Processing: End")
-// }
-
 // func GetHTTPCode() {
 // 	log.Printf("Processing: Generating HTTP Code Count")
 // 	for _, item := range updateQueue {
