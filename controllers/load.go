@@ -3,6 +3,7 @@ package controllers
 import (
 	"log"
 	"log-parser/models"
+	"log-parser/service"
 	"strconv"
 )
 
@@ -11,8 +12,6 @@ var (
 	UpdateQueue []models.Logs
 	// List going to hold the ips
 	List []string
-	// Countries going to holds countries data
-	Countries map[string]int
 	// Uniqueurlqueue going to holds uniqueURL data
 	Uniqueurlqueue map[string]int
 	// HTTPErrorCodeQueue going to holds http error code data
@@ -156,6 +155,23 @@ func GetReferrer(queue []models.Logs) map[string]int {
 	log.Println("Processing: End")
 	return ReferrerQueue
 
+}
+
+// GetCountries creates the hashmap of countries
+func GetCountries(queue []service.Location) map[string]int {
+	countries := make(map[string]int)
+	log.Println("Processing: Generating unique Countries")
+	for _, item := range queue {
+		_, exist := countries[item.Country]
+
+		if exist {
+			countries[item.Country]++ // increase counter by 1 if already in the map
+		} else {
+			countries[item.Country] = 1 // else start counting from 1
+		}
+	}
+	log.Println("Processing: End")
+	return countries
 }
 
 // // UniqueIP eliminates the duplicate data and returns back the unique ips
