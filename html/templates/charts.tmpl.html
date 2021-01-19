@@ -71,7 +71,7 @@
         data: {
             labels: [{{ range $key, $value:= .HTTPCode }} '{{$key}}', {{ end }}],
     datasets: [{
-        label: 'Top 5 HTTP Status Code',
+        label: 'Status Code Count',
         data: [{{ range $key, $value:= .HTTPCode }} '{{$value}}', {{ end }}],
         backgroundColor: [
             'rgb(154, 205, 50)',
@@ -92,89 +92,116 @@
         },
     options: {
         legend: {
-            display: true,
-                labels: {
-                fontColor: 'rgb(255, 99, 132)'
-            },
             position: 'right',
-                align: 'center'
-        }
+            align: 'center'
+        },
+        title: {
+            display: true,
+            text: 'Top 5 HTTP Status Code',
+            fontColor:'white',
+            align:'center'
+      }
     }
     });
 </script>
 
 <script>
+    Chart.defaults.global.elements.line.fill = false;
     var ctx = document.getElementById('HTTPErrorChart').getContext('2d');
     var myChart = new Chart(ctx, {
-        type: 'pie',
+        type: 'line',
         data: {
             labels: [{{ range $key, $value:= .HTTPError }} '{{$key}}', {{ end }}],
     datasets: [{
-        label: 'Top 3 HTTP Error Status Code',
+        label: 'Top 5 Error Status Code',
         data: [{{ range $key, $value:= .HTTPError }} '{{$value}}', {{ end }}],
-        backgroundColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 206, 86)'
-        ],
+        fill:false,
+        // backgroundColor: [
+        //     'rgb(255, 99, 132)',
+        //     'rgb(54, 162, 235)',
+        //     'rgb(255, 206, 86)'
+        // ],
             borderColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
-                'rgb(255, 206, 86)'
+                'rgb(255, 206, 86)',
+                'rgb(100, 150, 180)',
+                'rgb(75, 192, 192)'
             ],
-                borderWidth: 3
+                borderWidth: 3,
+                pointBackgroundColor: 'rgba(255,150,0,0.5)',
+                pointRadius: 5,
+                pointHoverRadius: 10,
+                pointHitRadius: 30,
+                pointBorderWidth: 2,
+                pointStyle: 'Rounded'
             }]
         },
     options: {
         legend: {
             display: true,
                 labels: {
-                fontColor: 'rgb(255, 99, 132)'
+                fontColor: 'white'
             },
-            position: 'right',
-                align: 'center'
+            title:{
+                align:'center'
+            }
         }
     }
     });
 </script>
 <script>
-    var ctx = document.getElementById('SentBytes').getContext('2d');
+    var ctx = document.getElementById('TopCountries').getContext('2d');
     var myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'doughnut',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: [{{ range $key, $value:= .Countries }} '{{$key}}', {{ end }}],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                // backgroundColor: [
-                //     'rgb(255, 99, 132)',
-                //     'rgb(54, 162, 235)',
-                //     'rgb(255, 206, 86)',
-                //     'rgb(75, 192, 192)',
-                //     'rgb(153, 102, 255)',
-                //     'rgb(255, 159, 64)'
-                // ],
+                label: 'Visited Count',
+                data: [{{ range $key, $value:= .Countries }} '{{$value}}', {{ end }}],
+                backgroundColor: [
+                    'rgb(106, 99, 128) ',
+                    'rgb(146, 131, 128)',
+                    'rgb(146, 96, 232)',
+                    'rgb(129, 211, 255)',
+                    'rgb(87, 231, 197)',
+                    'rgb(89, 191, 188)',
+                    'rgb(107, 177, 78)',
+                    'rgb(100, 100, 100)',
+                    'rgb(100, 150, 180)',
+                    'rgb(75, 192, 192)'
+                ],
                 borderColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 206, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(153, 102, 255)',
-                    'rgb(255, 159, 64)'
+                'rgb(106, 99, 128) ',
+                    'rgb(146, 131, 128)',
+                    'rgb(146, 96, 232)',
+                    'rgb(129, 211, 255)',
+                    'rgb(87, 231, 197)',
+                    'rgb(89, 191, 188)',
+                    'rgb(107, 177, 78)',
+                    'rgb(100, 100, 100)',
+                    'rgb(100, 150, 180)',
+                    'rgb(75, 192, 192)'
                 ],
                 borderWidth: 3
             }]
         },
         options: {
-            scales: {
-                yAxes: [{
-                    // ticks: {
-                    //     beginAtZero: true
-                    // },
-                    stacked: true
-                }]
-            }
-        }
+            legend: {
+                // display: true,
+                //     labels: {
+                //     fontColor: 'rgb(255, 99, 132)'
+                // },
+                position: 'right',
+                align: 'center',
+        },
+        title: {
+            display: true,
+            text: 'Top 10 Visited Countries',
+            fontColor:'white',
+            align:'center'
+      }
+    }
     });
 </script>
 </script>
@@ -186,7 +213,7 @@
         data: {
             labels: [{{ range $key, $value:= .TopIPS }} '{{$key}}', {{ end }}],
     datasets: [{
-        label: 'Top 10 Visited IPS',
+        label: 'Times Visited',
         data: [{{ range $key, $value:= .TopIPS }} '{{$value}}', {{ end }}],
         backgroundColor: [
             'rgb(255, 99, 132)',
@@ -216,13 +243,13 @@
     }]
         },
     options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
+        legend: { display: false },
+        title: {
+            display: true,
+            text: 'Top 10 Most Visited IP',
+            fontColor:'white',
+            align:'center'
+      }
     }
     });
 </script>
@@ -303,7 +330,7 @@
                 fontColor: 'rgb(255, 99, 132)'
             },
             position: 'right',
-                align: 'center'
+            align: 'center'
         }
     }
     });
