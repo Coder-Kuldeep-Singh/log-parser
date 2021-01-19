@@ -174,6 +174,27 @@ func GetCountries(queue []service.Location) map[string]int {
 	return countries
 }
 
+// type UniqueVisitors struct {
+
+// }
+
+// UniqueVisitorsByCity generates the unique cities data
+func UniqueVisitorsByCity(queue []service.Location) map[string]int {
+	visitors := make(map[string]int)
+	for _, newQueue := range queue {
+		if newQueue.City == "" {
+			continue
+		}
+		_, exists := visitors[newQueue.City]
+		if exists {
+			visitors[newQueue.City]++
+		} else {
+			visitors[newQueue.City] = 1
+		}
+	}
+	return visitors
+}
+
 // // UniqueIP eliminates the duplicate data and returns back the unique ips
 // func UniqueIP() []string {
 // 	keys := make(map[string]bool)
