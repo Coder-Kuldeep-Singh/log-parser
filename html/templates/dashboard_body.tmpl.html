@@ -124,6 +124,45 @@
                     </div>
                 </div>
             </div>
+            <div class="row" style="margin-top:5px;">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
+                    <div class="card bg-dark text-white" style="padding:5px">
+                        <div class="card-body">
+                            <footer class="blockquote-footer">
+                                [Logs] Unique Visitors by City
+                            </footer>
+                            <div class="table-responsive table-responsive-sm">
+                                <table class="table align-middle text-white">
+                                    <thead>
+                                        <tr>
+                                            <th>City</th>
+                                            <th>Unique Visitors</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{ range $key, $value:= .VisitorsByCity }}
+                                        <tr>
+                                            <td>{{$key}}</td>
+                                            <td>{{$value}}</td>
+                                        </tr>
+                                        {{ end }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-md-12">
+                    <div class="card bg-dark text-white" style="padding:5px">
+                        <div class="card-body">
+                            <footer class="blockquote-footer">
+                                [Logs] Top 3 Used Methods
+                            </footer>
+                            <canvas id="DeviceChart" height="auto"></canvas>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
         </div>
         <!-- <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
                 <div class="row">
