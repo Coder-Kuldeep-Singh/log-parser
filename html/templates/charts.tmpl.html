@@ -2,14 +2,30 @@
 
 <script>
     var cities = L.layerGroup();
-    {{ range .Location }} L.marker([{{.Latitude }}, {{.Longitude }}]).bindPopup({{ .City }}).addTo(cities), {{ end }}
-    L.marker([{{.LastLocation.Latitude }}, {{.LastLocation.Longitude }}]).bindPopup({{.LastLocation.City }}).addTo(cities);
+    // {{ range .Location }} L.marker([{{.Latitude }}, {{.Longitude }}]).bindPopup({{ .City }}).addTo(cities), {{ end }}
+    {{ range .Location }} L.circle([{{.Latitude }}, {{.Longitude }}],
+    {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.1,
+        radius: 500,
+    }).bindPopup({{ .City }}).addTo(cities), {{ end }}
+    // L.marker([{{.LastLocation.Latitude }}, {{.LastLocation.Longitude }}]).bindPopup({{.LastLocation.City }}).addTo(cities);
+    L.circle([{{.LastLocation.Latitude }}, {{.LastLocation.Longitude }}],{
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500,
+    }).bindPopup({{.LastLocation.City }}).addTo(cities);
     var mbUrl = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
     var grayscale = L.tileLayer(mbUrl, { id: 'mapbox/light-v9', tileSize: 512, zoomOffset: -1 }),
         streets = L.tileLayer(mbUrl, { id: 'mapbox/streets-v11', tileSize: 512, zoomOffset: -1 });
     var map = L.map('map', {
         center: [8.7832, 34.5085],
         zoom: 2,
+        maxZoom: 18,
+        tileSize: 512,
+        zoomOffset: -1,
         layers: [grayscale, cities]
     });
     var baseLayers = {
@@ -331,6 +347,43 @@
             },
             position: 'right',
             align: 'center'
+        }
+    }
+    });
+</script>
+<script>
+    var ctx = document.getElementById('BotsChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{{ range $key, $value:= .Bots }} '{{$key}}', {{ end }}],
+    datasets: [{
+        label: 'Top 5 Bots Running on Website',
+        data: [{{ range $key, $value:= .Bots }} '{{$value}}', {{ end }}],
+        backgroundColor: [
+            'rgb(255, 159, 64)',
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)',
+            'rgb(75, 192, 192)'
+        ],
+            borderColor: [
+                'rgb(255, 159, 64)',
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(75, 192, 192)'
+            ],
+                borderWidth: 3
+    }]
+        },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
         }
     }
     });
