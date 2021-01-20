@@ -195,6 +195,23 @@ func UniqueVisitorsByCity(queue []service.Location) map[string]int {
 	return visitors
 }
 
+// UniqueBots return the counts of the bots
+func UniqueBots(queue []models.Logs) map[string]int {
+	bots := make(map[string]int)
+	for _, newQueue := range queue {
+		if newQueue.Bots == "" || len(newQueue.Bots) == 2 {
+			continue
+		}
+		_, exists := bots[newQueue.Bots]
+		if exists {
+			bots[newQueue.Bots]++
+		} else {
+			bots[newQueue.Bots] = 1
+		}
+	}
+	return bots
+}
+
 // // UniqueIP eliminates the duplicate data and returns back the unique ips
 // func UniqueIP() []string {
 // 	keys := make(map[string]bool)
