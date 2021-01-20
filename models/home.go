@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strings"
 )
 
 // error levels
@@ -25,8 +26,10 @@ type Logs struct {
 	SendBytes      string `json:"sent_bytes"`
 	ReferrerURL    string `json:"referrer_url"`
 	UserAgent      string `json:"user_agent"`
-	// browser        string
-	// system         string
+	Browser        string `json:"browser"`
+	OS             string `json:"os"`
+	Device         string `json:"device"`
+	Bots           string `json:"bot"`
 }
 
 // ErrorHandling handles the error and return formated error
@@ -76,9 +79,49 @@ func ReadFile(outcome *os.File) []Logs {
 			UserAgent:      matched[0][11],
 			// browser        :,
 			// system         :,
+			Bots: Bot(matched[0][11]),
 		})
+		// log.Println(GetDeviceAndOS(matched[0][11]))
 	}
 	return rows
+}
+
+// GetDeviceAndOS returns back the os and device from useragent
+func GetDeviceAndOS(userAgent string) (string, string) {
+	if userAgent == "" {
+		return "", ""
+	}
+	Contains := strings.Contains(userAgent, "(KHTML, like Gecko)")
+	if Contains == false {
+		return "", ""
+	}
+	spl := strings.Split(userAgent, "(")
+	log.Println(spl)
+	return "", ""
+}
+
+// Bot return the bots
+func Bot(userAgent string) string {
+	if userAgent == "" {
+		return ""
+	}
+	if strings.Contains(userAgent, "(KHTML, like Gecko)") {
+		return ""
+	}
+	spl := strings.Split(userAgent, "(")
+	if len(spl) < 2 {
+		return ""
+	}
+	second := strings.Split(spl[1], "/")[0]
+	if len(second) < 2 {
+		return ""
+	}
+	AnotherBlock := strings.Split(second, " ")
+	if len(AnotherBlock) < 2 {
+		return ""
+	}
+
+	return AnotherBlock[1]
 }
 
 // regularExpression runs the expression on the given data and return back the parse data
