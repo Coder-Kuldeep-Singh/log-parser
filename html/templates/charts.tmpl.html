@@ -358,7 +358,7 @@
         data: {
             labels: [{{ range $key, $value:= .Bots }} '{{$key}}', {{ end }}],
     datasets: [{
-        label: 'Top 5 Bots Running on Website',
+        label: 'Count',
         data: [{{ range $key, $value:= .Bots }} '{{$value}}', {{ end }}],
         backgroundColor: [
             'rgb(255, 159, 64)',
@@ -377,14 +377,115 @@
                 borderWidth: 3
     }]
         },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
+        options: {
+        legend: { display: false },
+        title: {
+            display: true,
+            text: 'Top 5 Bots',
+            fontColor:'white',
+            align:'center'
+      }
+    }
+    });
+</script>
+
+<script>
+    // Chart.defaults.global.elements.line.fill = false;
+    var ctx = document.getElementById('NotFoundChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{{ range $key, $value:= .NotFoundURL }} '{{$key}}', {{ end }}],
+    datasets: [{
+        label: 'Count',
+        data: [{{ range $key, $value:= .NotFoundURL }} '{{$value}}', {{ end }}],
+        fill:false,
+        backgroundColor: [
+            'rgb(255, 159, 64)',
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)',
+            'rgb(75, 192, 192)'
+        ],
+            borderColor: [
+            'rgb(255, 159, 64)',
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 206, 86)',
+            'rgb(75, 192, 192)'
+            ],
+                borderWidth: 1,
+                pointBackgroundColor: 'rgba(255,150,0,0.5)',
+                pointRadius: 5,
+                pointHoverRadius: 10,
+                pointHitRadius: 30,
+                pointBorderWidth: 2,
+                pointStyle: 'Rounded'
             }]
-        }
+        },
+    // options: {
+    //     legend: {
+    //         display: true,
+    //             labels: {
+    //             fontColor: 'white'
+    //         },
+    //         title:{
+    //             align:'center'
+    //         }
+    //     }
+    // }
+    options: {
+        legend: { display: false },
+        title: {
+            display: true,
+            text: 'Top 5 Not Found URL',
+            fontColor:'white',
+            align:'center'
+      }
+    }
+    });
+</script>
+
+<script>
+    // Chart.defaults.global.elements.line.fill = false;
+    var ctx = document.getElementById('MostVisitedChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [{{ range $key, $value:= .TopURL }} '{{$key}}', {{ end }}],
+    datasets: [{
+        label: 'URL Count',
+        data: [{{ range $key, $value:= .TopURL }} '{{$value}}', {{ end }}],
+        fill:false,
+        // backgroundColor: [
+        //     'rgb(255, 99, 132)',
+        //     'rgb(54, 162, 235)',
+        //     'rgb(255, 206, 86)'
+        // ],
+            borderColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 206, 86)',
+                'rgb(100, 150, 180)',
+                'rgb(75, 192, 192)'
+            ],
+                borderWidth: 3,
+                pointBackgroundColor: 'rgba(255,150,0,0.5)',
+                pointRadius: 5,
+                pointHoverRadius: 10,
+                pointHitRadius: 30,
+                pointBorderWidth: 2,
+                pointStyle: 'Rounded'
+            }]
+        },
+        options: {
+        legend: { display: false },
+        title: {
+            display: true,
+            text: 'Top 5 Most Visited IP',
+            fontColor:'white',
+            align:'center'
+      }
     }
     });
 </script>
