@@ -70,8 +70,10 @@ func MainDashboard(c *gin.Context) {
 	Counties := GetCountries(Location)
 	uniqueVisitors := UniqueVisitorsByCity(Location)
 	bots := UniqueBots(UpdateQueue)
-	// log.Println(Nmaximum(code, 3))
+	NotFound := NotFoundPages(UpdateQueue)
+	topURL := TopVisitedURL(UpdateQueue)
 	lastElement := Location[len(Location)-1]
+
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
 		"TotalHits":      len(UpdateQueue),
 		"HTTPCode":       Nmaximum(code, 5),
@@ -84,6 +86,8 @@ func MainDashboard(c *gin.Context) {
 		"Countries":      Nmaximum(Counties, 10),
 		"VisitorsByCity": Nmaximum(uniqueVisitors, 10),
 		"Bots":           Nmaximum(bots, 5),
+		"NotFoundURL":    Nmaximum(NotFound, 5),
+		"TopURL":         Nmaximum(topURL, 5),
 		// "HTTPCODE":     getHTTPCode(updateQueue),
 		// "HTTPERROR":    getTheErrorStatus(updateQueue),
 	})
