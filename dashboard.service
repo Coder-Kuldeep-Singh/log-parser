@@ -1,0 +1,14 @@
+[Unit]
+Description=Log-Service
+After=network.target
+[Service]
+Type=simple
+User=tutree
+Restart=always
+RestartSec=5s
+WorkingDirectory=/home/tutree/Desktop/dev/log-parser
+ExecStart=/bin/bash /home/tutree/Desktop/dev/log-parser/production.sh
+
+
+[Install]
+WantedBy=multi-user.target
