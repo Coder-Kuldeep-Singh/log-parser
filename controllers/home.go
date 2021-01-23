@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"log-parser/models"
 	"log-parser/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	geo "github.com/oschwald/geoip2-golang"
@@ -73,9 +75,12 @@ func MainDashboard(c *gin.Context) {
 	NotFound := NotFoundPages(UpdateQueue)
 	topURL := TopVisitedURL(UpdateQueue)
 	lastElement := Location[len(Location)-1]
-
+	log.Println("File Size", LogSize)
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
-		"TotalHits":      len(UpdateQueue),
+		"TotalHits":      GetValidLength(len(UpdateQueue)),
+		"LogSize":        LogSize / 1000000,
+		"NotFoundSize":   GetValidLength(len(NotFound)),
+		"ValidRequests":  GetValidLength(len(UpdateQueue) - len(NotFound)),
 		"HTTPCode":       Nmaximum(code, 5),
 		"HTTPError":      Nmaximum(errorCode, 5),
 		"TopIPS":         Nmaximum(topIps, 10),
@@ -88,9 +93,28 @@ func MainDashboard(c *gin.Context) {
 		"Bots":           Nmaximum(bots, 5),
 		"NotFoundURL":    Nmaximum(NotFound, 5),
 		"TopURL":         Nmaximum(topURL, 5),
+
 		// "HTTPCODE":     getHTTPCode(updateQueue),
 		// "HTTPERROR":    getTheErrorStatus(updateQueue),
 	})
+}
+
+// GetValidLength returns back the valid string
+func GetValidLength(data int) string {
+	stringValid := strconv.Itoa(data)
+	if data < 10000 {
+		return fmt.Sprintf("%sk", stringValid[0:1])
+	}
+	if data < 100000 {
+		return fmt.Sprintf("%sk", stringValid[0:2])
+	}
+	if data < 1000000 {
+		return fmt.Sprintf("%sk", stringValid[0:3])
+	}
+	if data < 10000000 {
+		return fmt.Sprintf("%sm %sk", stringValid[0:1], stringValid[1:3])
+	}
+	return ""
 }
 
 // ReportIP generates the report of ip
