@@ -8,6 +8,8 @@ import (
 )
 
 var (
+	// LogSize holds the total size of the loaded log files
+	LogSize int64
 	// UpdateQueue holds the all data
 	UpdateQueue []models.Logs
 	// List going to hold the ips
@@ -20,7 +22,7 @@ var (
 
 // LoadGlobally loads the data globally
 func LoadGlobally() {
-	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1", "./html/static/nginx/access.log.2", "./html/static/nginx/access.log.3", "./html/static/nginx/access.log.4", "./html/static/nginx/access.log.5", "./html/static/nginx/access.log.6", "./html/static/nginx/access.log.7", "./html/static/nginx/access.log.8", "./html/static/nginx/access.log.9", "./html/static/nginx/access.log.10"}
+	f := []string{"./html/static/nginx/access.log", "./html/static/nginx/access.log.1", "./html/static/nginx/access.log.2", "./html/static/nginx/access.log.3", "./html/static/nginx/access.log.4", "./html/static/nginx/access.log.5", "./html/static/nginx/access.log.6", "./html/static/nginx/access.log.7", "./html/static/nginx/access.log.8", "./html/static/nginx/access.log.9", "./html/static/nginx/access.log.10", "./html/static/nginx/access.log.11", "./html/static/nginx/access.log.12"}
 	queue := [][]models.Logs{}
 	for _, path := range f {
 		log.Printf("File Processing Start : [%s]", path)
@@ -28,9 +30,14 @@ func LoadGlobally() {
 		err = models.ErrorHandling(err, "error to open file", models.WARNING)
 		if err != nil {
 			log.Println(err)
-			// return
 			continue
 		}
+		Filestate, err := file.Stat()
+		if err != nil {
+			log.Printf("error to get the file stat %s", err.Error())
+			continue
+		}
+		LogSize += Filestate.Size()
 		queue = append(queue, models.ReadFile(file))
 		log.Printf("File Processing End : [%s]", path)
 	}
