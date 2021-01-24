@@ -255,3 +255,12 @@ func TopVisitedURL(queue []models.Logs) map[string]int {
 	}
 	return URLQueue
 }
+
+// GetTotalBytes returns the total bytes used to serve users
+func GetTotalBytes(queue []models.Logs) int64 {
+	var sum int64
+	for _, n := range queue {
+		sum += n.SendBytes
+	}
+	return sum
+}
