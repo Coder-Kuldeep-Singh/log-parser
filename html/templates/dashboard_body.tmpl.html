@@ -13,13 +13,13 @@
                 </center>
             </div>
         </div> -->
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
             <div class="card bg-dark text-white" style="padding:5px;">
                 <div class="card-body">
                     <center>
-                        <h1 class="display-4">
+                        <h3>
                             {{.TotalHits}}
-                        </h1>
+                        </h3>
                         <footer class="blockquote-footer">
                             Total Requests
                         </footer>
@@ -27,13 +27,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
             <div class="card bg-dark text-white" style="padding:5px;">
                 <div class="card-body">
                     <center>
-                        <h1 class="display-4">
+                        <h3>
                             {{.ValidRequests}}
-                        </h1>
+                        </h3>
                         <footer class="blockquote-footer">
                             Valid Requests
                         </footer>
@@ -41,13 +41,13 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
             <div class="card bg-dark text-white" style="padding:5px;">
                 <div class="card-body">
                     <center>
-                        <h1 class="display-4" >
+                        <h3>
                             {{.NotFoundSize}}
-                        </h1>
+                        </h3>
                         <footer class="blockquote-footer">
                             Failed Requests
                         </footer>
@@ -55,15 +55,43 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
             <div class="card bg-dark text-white" style="padding:5px;">
                 <div class="card-body">
                     <center>
-                        <h1 class="display-4" >
+                        <h3>
                             {{.LogSize}}MB
-                        </h1>
+                        </h3>
                         <footer class="blockquote-footer">
                             Log Size
+                        </footer>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <div class="card bg-dark text-white" style="padding:5px;">
+                <div class="card-body">
+                    <center>
+                        <h3>
+                            {{.TotalBytesServed}}GB
+                        </h3>
+                        <footer class="blockquote-footer">
+                            Total Size of Served Data
+                        </footer>
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            <div class="card bg-dark text-white" style="padding:5px;">
+                <div class="card-body">
+                    <center>
+                        <h3>
+                            {{.TotalBytesServed}}GB
+                        </h3>
+                        <footer class="blockquote-footer">
+                            Total Size of Served Data
                         </footer>
                     </center>
                 </div>
