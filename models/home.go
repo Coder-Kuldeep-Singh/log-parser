@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -23,7 +24,7 @@ type Logs struct {
 	URL            string `json:"url"`
 	ProtocolMethod string `json:"protocol_method"`
 	ServerResponse string `json:"http_status"`
-	SendBytes      string `json:"sent_bytes"`
+	SendBytes      int64  `json:"sent_bytes"`
 	ReferrerURL    string `json:"referrer_url"`
 	UserAgent      string `json:"user_agent"`
 	Browser        string `json:"browser"`
@@ -74,7 +75,7 @@ func ReadFile(outcome *os.File) []Logs {
 			URL:            matched[0][6],
 			ProtocolMethod: matched[0][7],
 			ServerResponse: matched[0][8],
-			SendBytes:      matched[0][9],
+			SendBytes:      StrToInt(matched[0][9]),
 			ReferrerURL:    matched[0][10],
 			UserAgent:      matched[0][11],
 			// browser        :,
@@ -84,6 +85,19 @@ func ReadFile(outcome *os.File) []Logs {
 		// log.Println(GetDeviceAndOS(matched[0][11]))
 	}
 	return rows
+}
+
+// StrToInt converts string to int64
+func StrToInt(str string) int64 {
+	if str == "" {
+		return 0
+	}
+	parsed, err := strconv.ParseInt(strings.ReplaceAll(str, `"`, ""), 10, 64)
+	if err != nil {
+		log.Println("error to parse str to int", err.Error())
+		return 0
+	}
+	return parsed
 }
 
 // GetDeviceAndOS returns back the os and device from useragent
