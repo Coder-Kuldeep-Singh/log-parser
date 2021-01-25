@@ -79,6 +79,7 @@ func MainDashboard(c *gin.Context) {
 		"TotalHits":        GetValidLength(len(UpdateQueue)),
 		"LogSize":          fmt.Sprintf("%.2f", float64(LogSize)/float64(1000000)),
 		"TotalBytesServed": fmt.Sprintf("%.2f", float64(GetTotalBytes(UpdateQueue))/float64(1000000000)),
+		"UniqueVisitors":   len(topIps),
 		"NotFoundSize":     GetValidLength(len(NotFound)),
 		"ValidRequests":    GetValidLength(len(UpdateQueue) - len(NotFound)),
 		"HTTPCode":         Nmaximum(code, 5),
