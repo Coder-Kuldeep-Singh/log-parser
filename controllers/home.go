@@ -76,12 +76,13 @@ func MainDashboard(c *gin.Context) {
 	topURL := TopVisitedURL(UpdateQueue)
 	lastElement := Location[len(Location)-1]
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
-		"TotalHits":        GetValidLength(len(UpdateQueue)),
+		"TotalHits":        len(UpdateQueue),
 		"LogSize":          fmt.Sprintf("%.2f", float64(LogSize)/float64(1000000)),
 		"TotalBytesServed": fmt.Sprintf("%.2f", float64(GetTotalBytes(UpdateQueue))/float64(1000000000)),
 		"UniqueVisitors":   len(topIps),
-		"NotFoundSize":     GetValidLength(len(NotFound)),
-		"ValidRequests":    GetValidLength(len(UpdateQueue) - len(NotFound)),
+		"FailedRequests":   ErrorCodeCounts(UpdateQueue),
+		"NotFound":         Error404NotFound(UpdateQueue),
+		"ValidRequests":    len(UpdateQueue) - ErrorCodeCounts(UpdateQueue) - Error404NotFound(UpdateQueue),
 		"HTTPCode":         Nmaximum(code, 5),
 		"HTTPError":        Nmaximum(errorCode, 5),
 		"TopIPS":           Nmaximum(topIps, 10),
