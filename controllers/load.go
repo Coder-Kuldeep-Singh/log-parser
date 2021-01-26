@@ -264,3 +264,25 @@ func GetTotalBytes(queue []models.Logs) int64 {
 	}
 	return sum
 }
+
+// ErrorCodeCounts returns the count of the all error responses
+func ErrorCodeCounts(queue []models.Logs) int {
+	Count := 0
+	for _, newQueue := range queue {
+		if newQueue.ServerResponse > "399" && newQueue.ServerResponse != "404" {
+			Count++
+		}
+	}
+	return Count
+}
+
+// Error404NotFound returns the count of the all error responses
+func Error404NotFound(queue []models.Logs) int {
+	Count := 0
+	for _, newQueue := range queue {
+		if newQueue.ServerResponse == "404" {
+			Count++
+		}
+	}
+	return Count
+}
