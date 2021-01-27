@@ -95,7 +95,7 @@ func MainDashboard(c *gin.Context) {
 		"Bots":             Nmaximum(bots, 5),
 		"NotFoundURL":      Nmaximum(NotFound, 5),
 		"TopURL":           Nmaximum(topURL, 5),
-
+		"ReferrersUnique":  len(referrer),
 		// "HTTPCODE":     getHTTPCode(updateQueue),
 		// "HTTPERROR":    getTheErrorStatus(updateQueue),
 	})
