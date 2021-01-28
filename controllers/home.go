@@ -7,6 +7,7 @@ import (
 	"log-parser/service"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	geo "github.com/oschwald/geoip2-golang"
@@ -75,6 +76,7 @@ func MainDashboard(c *gin.Context) {
 	NotFound := NotFoundPages(UpdateQueue)
 	topURL := TopVisitedURL(UpdateQueue)
 	lastElement := Location[len(Location)-1]
+	// log.Println(UpdateQueue[0].Timestamp, UpdateQueue[len(UpdateQueue)-1].Timestamp)
 	c.HTML(http.StatusOK, "dashboard.tmpl.html", gin.H{
 		"TotalHits":        len(UpdateQueue),
 		"LogSize":          fmt.Sprintf("%.2f", float64(LogSize)/float64(1000000)),
@@ -96,6 +98,7 @@ func MainDashboard(c *gin.Context) {
 		"NotFoundURL":      Nmaximum(NotFound, 5),
 		"TopURL":           Nmaximum(topURL, 5),
 		"ReferrersUnique":  len(referrer),
+		"LastUpdated":      time.Now().Format("2006-01-02 15:04:05.000000000"),
 		// "HTTPCODE":     getHTTPCode(updateQueue),
 		// "HTTPERROR":    getTheErrorStatus(updateQueue),
 	})
